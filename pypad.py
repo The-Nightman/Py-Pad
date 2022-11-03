@@ -13,46 +13,81 @@ app.title("Untitled - Py Pad")
 open_file_name = False
 
 
-def new_file():
+def new_file(event=None):
     global open_file_name
-    open_file_name = False
-    text_box.delete("1.0", "end")
-    app.title("Untitled - Py Pad")
+    if tkinter.Event:
+        open_file_name = False
+        text_box.delete("1.0", "end")
+        app.title("Untitled - Py Pad")
+    else:
+        open_file_name = False
+        text_box.delete("1.0", "end")
+        app.title("Untitled - Py Pad")
 
 
-def open_file():
-    txt_file = filedialog.askopenfilename(initialdir="C:", title="Open File", filetypes=(
-        ("Text Files", "*.txt"), ("All Files", "*.*")))
-    if txt_file:
-        global open_file_name
-        open_file_name = txt_file
-    title = txt_file.replace("\\", "/").split("/")
-    app.title(f"{title[-1]} - Py Pad")
-    txt_file = open(txt_file, "r")
-    content = txt_file.read()
-    text_box.delete("1.0", "end")
-    text_box.insert("end", content)
-
-
-def save_as():
-    txt_file = filedialog.asksaveasfilename(
-        defaultextension=".*", initialdir="C:", title="Save As", filetypes=(("Text Files", "*.txt"), ("All Files", "*.*")))
-    if txt_file:
+def open_file(event=None):
+    global open_file_name
+    if tkinter.Event:
+        txt_file = filedialog.askopenfilename(initialdir="C:", title="Open File", filetypes=(
+            ("Text Files", "*.txt"), ("All Files", "*.*")))
+        if txt_file:
+            open_file_name = txt_file
         title = txt_file.replace("\\", "/").split("/")
         app.title(f"{title[-1]} - Py Pad")
-        txt_file = open(txt_file, "w")
-        txt_file.write(text_box.get("1.0", "end"))
-        txt_file.close
-
-
-def save():
-    global open_file_name
-    if open_file_name:
-        txt_file = open(open_file_name, "w")
-        txt_file.write(text_box.get("1.0", "end"))
-        txt_file.close
+        txt_file = open(txt_file, "r")
+        content = txt_file.read()
+        text_box.delete("1.0", "end")
+        text_box.insert("end", content)
     else:
-        save_as()
+        txt_file = filedialog.askopenfilename(initialdir="C:", title="Open File", filetypes=(
+            ("Text Files", "*.txt"), ("All Files", "*.*")))
+        if txt_file:
+            open_file_name = txt_file
+        title = txt_file.replace("\\", "/").split("/")
+        app.title(f"{title[-1]} - Py Pad")
+        txt_file = open(txt_file, "r")
+        content = txt_file.read()
+        text_box.delete("1.0", "end")
+        text_box.insert("end", content)
+
+
+def save_as(event=None):
+    if tkinter.Event:
+        txt_file = filedialog.asksaveasfilename(
+            defaultextension=".*", initialdir="C:", title="Save As", filetypes=(("Text Files", "*.txt"), ("All Files", "*.*")))
+        if txt_file:
+            title = txt_file.replace("\\", "/").split("/")
+            app.title(f"{title[-1]} - Py Pad")
+            txt_file = open(txt_file, "w")
+            txt_file.write(text_box.get("1.0", "end"))
+            txt_file.close
+    else:
+        txt_file = filedialog.asksaveasfilename(
+            defaultextension=".*", initialdir="C:", title="Save As", filetypes=(("Text Files", "*.txt"), ("All Files", "*.*")))
+        if txt_file:
+            title = txt_file.replace("\\", "/").split("/")
+            app.title(f"{title[-1]} - Py Pad")
+            txt_file = open(txt_file, "w")
+            txt_file.write(text_box.get("1.0", "end"))
+            txt_file.close
+
+
+def save(event=None):
+    global open_file_name
+    if tkinter.Event:
+        if open_file_name:
+            txt_file = open(open_file_name, "w")
+            txt_file.write(text_box.get("1.0", "end"))
+            txt_file.close
+        else:
+            save_as()
+    else:
+        if open_file_name:
+            txt_file = open(open_file_name, "w")
+            txt_file.write(text_box.get("1.0", "end"))
+            txt_file.close
+        else:
+            save_as()
 
 
 def cut_text():
@@ -107,11 +142,14 @@ app.config(menu=menu_widget)
 
 file_menu = tkinter.Menu(menu_widget, tearoff=False)
 menu_widget.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="New", accelerator="Ctrl+n", command=new_file)
-file_menu.add_command(label="Open...", accelerator="Ctrl+o", command=open_file)
-file_menu.add_command(label="Save", accelerator="Ctrl+s", command=save)
+file_menu.add_command(label="New", accelerator="Ctrl+n",
+                      command=lambda: new_file())
+file_menu.add_command(label="Open...", accelerator="Ctrl+o",
+                      command=lambda: open_file())
+file_menu.add_command(label="Save", accelerator="Ctrl+s",
+                      command=lambda: save())
 file_menu.add_command(label="Save As...",
-                      accelerator="Ctrl+Shift+s", command=save_as)
+                      accelerator="Ctrl+Shift+s", command=lambda: save_as())
 file_menu.add_separator()
 file_menu.add_command(label="Exit", command=app.quit)
 
@@ -145,5 +183,9 @@ context_bar.pack(side="bottom", fill="x")
 app.bind("<Control-Key-x>", cut_text)
 app.bind("<Control-Key-c>", copy_text)
 app.bind("<Control-Key-v>", paste_text)
+app.bind("<Control-Key-s>", save)
+app.bind("<Control-Key-n>", new_file)
+app.bind("<Control-Key-o>", open_file)
+app.bind("<Control-Key-S>", save_as)
 
 app.mainloop()
