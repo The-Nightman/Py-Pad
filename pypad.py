@@ -3,6 +3,7 @@
 import customtkinter
 import tkinter
 from tkinter import filedialog
+import webbrowser
 
 customtkinter.set_appearance_mode("light")
 
@@ -121,6 +122,38 @@ def paste_text():
         text_box.insert(cursor_pos, text_select)
 
 
+def toggle_wrap():
+    if text_box["wrap"] == "word":
+        text_box.configure(wrap="none")
+    else:
+        text_box.configure(wrap="word")
+
+
+def create_about_window():
+    global about_image
+    about_window = tkinter.Toplevel(app)
+    about_window.geometry(f"{350}x{220}")
+    about_window.title("About Py Pad")
+    about_window.resizable(False, False)
+    about_window.transient(app)
+    about_window_button = customtkinter.CTkButton(
+        about_window, text="OK", relief="groove", corner_radius=3, command=about_window.destroy)
+    about_window_button.pack(side="bottom", anchor="e", padx=10, pady=10)
+    about_image = tkinter.PhotoImage(file="Python\\Py-Pad\\thenightman.png")
+    about_image_container = customtkinter.CTkLabel(
+        about_window, image=about_image)
+    about_image_container.pack(pady="15")
+    about_text = customtkinter.CTkLabel(
+        about_window, text_color="black", text="Py Pad designed and written by The Nightman")
+    about_text.pack(pady="0")
+    about_text_link = tkinter.Label(
+        about_window, fg="blue", cursor="hand2", text="https://github.com/The-Nightman")
+    about_text_link.bind(
+        "<Button-1>", lambda x: webbrowser.open_new("https://github.com/The-Nightman"))
+    about_text_link.pack(pady="5")
+    about_window.grab_set()
+
+
 frame = customtkinter.CTkFrame(app)
 frame.pack(fill="both", expand=True)
 
@@ -131,7 +164,7 @@ text_scroll_y.pack(side="right", fill="y")
 text_scroll_x.pack(side="bottom", fill="x")
 
 text_box = tkinter.Text(frame, wrap="none", font=("Helvetica", 11),
-                                    selectbackground="#00ffff", selectforeground="black", undo=True, yscrollcommand=text_scroll_y.set, xscrollcommand=text_scroll_x.set)
+                                    selectbackground="#33b1ff", selectforeground="black", undo=True, yscrollcommand=text_scroll_y.set, xscrollcommand=text_scroll_x.set)
 text_box.pack(fill="both", expand=True)
 
 text_scroll_y.configure(command=text_box.yview)
@@ -170,12 +203,13 @@ edit_menu.add_command(label="Paste", accelerator="Ctrl+v",
 
 format_menu = tkinter.Menu(menu_widget, tearoff=False)
 menu_widget.add_cascade(label="Format", menu=format_menu)
-format_menu.add_command(label="Text Wrapping")
+format_menu.add_checkbutton(label="Text Wrapping",
+                            command=lambda: toggle_wrap())
 format_menu.add_command(label="Font...")
 
 help_menu = tkinter.Menu(menu_widget, tearoff=False)
 menu_widget.add_cascade(label="Help", menu=help_menu)
-help_menu.add_command(label="About Py Pad")
+help_menu.add_command(label="About Py Pad", command=create_about_window)
 
 context_bar = customtkinter.CTkLabel(app, text="test", anchor="e", height=22)
 context_bar.pack(side="bottom", fill="x")
