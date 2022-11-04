@@ -5,12 +5,6 @@ import tkinter
 from tkinter import filedialog
 import webbrowser
 
-customtkinter.set_appearance_mode("light")
-
-app = customtkinter.CTk()
-app.geometry(f"{800}x{700}")
-app.title("Untitled - Py Pad")
-
 open_file_name = False
 
 
@@ -153,6 +147,12 @@ def create_about_window():
     about_text_link.pack(pady="5")
     about_window.grab_set()
 
+
+customtkinter.set_appearance_mode("light")
+
+app = customtkinter.CTk()
+app.geometry(f"{800}x{700}")
+app.title("Untitled - Py Pad")
 
 frame = customtkinter.CTkFrame(app)
 frame.pack(fill="both", expand=True)
