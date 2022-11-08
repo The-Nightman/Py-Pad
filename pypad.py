@@ -16,9 +16,15 @@ f_style_list = [
     "bold italic"
 ]
 
-default_font, default_style, default_size = "Consolas", "normal roman", 11
-current_font, current_style, current_size = default_font, default_style, default_size
-sample_font, sample_style, sample_size = current_font, current_style, current_size
+default_font = "Consolas"
+default_style = "normal roman"
+default_size = 11
+current_font = default_font
+current_style = default_style
+current_size = default_size
+sample_font = current_font
+sample_style = current_style
+sample_size = current_size
 
 
 def new_file(event=None):
